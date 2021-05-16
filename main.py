@@ -63,11 +63,11 @@ def get_movie_message(soup,len_movies,book,sh):
         #print(mov_name)
         # 电影的其他名字
         mov_oth_name = soup.select('#wrapper .grid_view > li .other')[i]
-        mov_oth_name = re.findall(re_oth_name,str(mov_oth_name))
-        list_movie.append(mov_oth_name[0])
-        #print(mov_oth_name)
+        mov_oth_name = re.findall(re_oth_name,str(mov_oth_name))[0].split('\xa0')[2]
+        list_movie.append(mov_oth_name)
+        print(mov_oth_name)
         #电影类型(待用正则优化)
-        type_movie = soup.select('#wrapper .grid_view > li')[i]
+        type_movie = soup.select('#wrapper .grid_view > li .bd')[i]
         num_type_movie = str(type_movie).find('<br/>')
         num_type_movie1 = str(type_movie).find('</p>')
         temp_num_type_movie = str(type_movie)[num_type_movie:num_type_movie1]
@@ -77,15 +77,11 @@ def get_movie_message(soup,len_movies,book,sh):
         score_movie = soup.select('#wrapper .grid_view > li .star')[i]
         score_movie = re.findall(re_score,str(score_movie))
         list_movie.append(score_movie[0])
-        print(list_movie)
+        #print(list_movie)
         #将数据导入excel
         sh.append(list_movie)
         #print(score_movie)
         book.save('豆瓣TOP250.xlsx')
-
-
-
-
 if __name__ == '__main__':
     #网页头信息
     headers={
@@ -142,7 +138,4 @@ if __name__ == '__main__':
         for j in range(1,252):
             sh.cell(j,i).alignment = Alignment(horizontal='center', vertical='center')
     book.save('豆瓣TOP250.xlsx')
-
     print('爬取完成！')
-
-
